@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/header.ejs %>
+  <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
+  <style>
+    .log{
+      color: green;
+      font-style: bold;
+    }
+  </style>
+</head>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCJQxV_jSlvdWZewyigW_oq3WVoO9mtMIU",
+    authDomain: "mediaconverter.firebaseapp.com",
+    databaseURL: "https://mediaconverter.firebaseio.com",
+    projectId: "mediaconverter",
+    storageBucket: "mediaconverter.appspot.com",
+    messagingSenderId: "230553046918"
+  };
+  firebase.initializeApp(config);
+
+  var starCountRef = firebase.database().ref('downloader/progresses/progressData');
+  starCountRef.on('value', function(snapshot) {
+    var data = snapshot.val();
+    $(".log").text("progress: "+data.progress+"%");
+    console.log(data.progress);
+    $(".link").text(data.linkData);
+    $(".path").val(data.linkData);
+    $(".songName").val(data.songName);
+
+    if(data.progress != 100){
+      $(".downloadForm").hide();
+    }
+    else{
+      $(".downloadForm").show();
+    }
+  });
+  
+
+</script>
+
+<p class="link">link</p>
+<br>
+<p class="log">progress</p>
+<br>
+<form class="downloadForm" method="POST" action="/startDownload">
+    <label>Video informations</label>
+    <input class="path" type="text" name="urlData">
+    <input class="songName" type="text" name="songName">
+    <br>
+    <input type="submit" value="Download">
+  </form>
+
+
+
+
+</html>
